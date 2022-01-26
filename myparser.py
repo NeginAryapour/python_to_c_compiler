@@ -155,8 +155,7 @@ class Parser(object):
             return "", instruction
 
         if instruction[0] in self.assign_symbols:
-            return self.yacc_assign(instruction)
-
+            return self.assign_code(instruction)
         elif instruction[0] in self.operation_symbols :
             return self.operator_code(instruction)
         elif instruction[0] == 'if':
@@ -296,7 +295,7 @@ class Parser(object):
     
     
 
-    def yacc_assign(self, instruction):
+    def assign_code(self, instruction):
         lefHandSide = instruction[1]
         rightHandSide = instruction[2]
         operator = instruction[0]
