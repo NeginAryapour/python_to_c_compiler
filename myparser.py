@@ -7,9 +7,9 @@ from mylexer import tokens, lexer, reserved
 
 
 class Parser(object):
-    tokens = tokens
-    lexer = lexer
-    keywords = reserved.keys()
+    
+
+
     precedence = (
         ('nonassoc', 'GE', 'GT', 'LE', 'LT', 'EQ', 'NE',),
         ('left', 'TIMES', 'DIVIDE'),
@@ -20,6 +20,9 @@ class Parser(object):
     operation_symbols = ['+', '-', '*', '/', '==', '>', '>=', '<', '<=', '!=']
 
     def __init__(self):
+        self.tokens = tokens
+        self.lexer = lexer
+        self.keywords = reserved.keys()
         self.parser = yacc.yacc(module=self)
         self.parse_tree = None
         self.three_address_code = None
