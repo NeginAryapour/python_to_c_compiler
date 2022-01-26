@@ -30,11 +30,7 @@ class Parser(object):
         self.tIndex = 0
         self.lIndex = 0
     
-    # Error rule for syntax errors
-    def p_error(self, p):
-        print("Syntax error in input!")
-
-
+    
     def p_stmts(self, p):
         """
         stmts : stmts stmt
@@ -140,6 +136,11 @@ class Parser(object):
     def p_empty(self, p):
         'empty :'
         p[0] = None
+
+    # Error rule for syntax errors
+    def p_error(self, p):
+        print("Syntax error in input!")
+
 
     def parsing(self, input_file):
         python_program_code = ''
