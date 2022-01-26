@@ -138,10 +138,6 @@ class Parser(object):
         'empty :'
         p[0] = None
 
-    # def parse(self, input_data):
-    #     self.parser.parse(input_data, lexer=self.lexer)
-    #     return self.parse_tree
-
     def parsing(self, input_file):
         python_program_code = ''
         with open(input_file, 'r') as python_file:
@@ -150,7 +146,7 @@ class Parser(object):
         self.parser.parse(python_program_code, lexer=self.lexer)
         return self.parse_tree
 
-    def get_yacc(self, instruction):
+    def generate_code(self, instruction):
         if type(instruction) != list:
             return "", instruction
 
@@ -210,7 +206,7 @@ class Parser(object):
         condition = instruction[1]
         statements = instruction[2]
 
-        condition_code, condition_root = self.get_yacc(condition)
+        condition_code, condition_root = self.generate_code(condition)
         statements_code = self.yacc_program(statements)
 
         start_while_label = self.labelindex_generator()
@@ -246,7 +242,7 @@ class Parser(object):
                 new_condition = 'else if'
             stack.append({
                 'condition_name': 'else if', 
-                'condition_code': self.get_yacc(instruction_copy[1]),
+                'condition_code': self.generate_code(instruction_copy[1]),
                 'statements_code': self.yacc_program(instruction_copy[2])
             })
 
@@ -284,8 +280,8 @@ class Parser(object):
         rightHandSide = instruction[2]
         operator = instruction[0]
 
-        lefHandSide_code, a_root = self.get_yacc(leftHandSide)
-        rightHandSide_code, b_root = self.get_yacc(rightHandSide)
+        lefHandSide_code, a_root = self.generate_code(leftHandSide)
+        rightHandSide_code, b_root = self.generate_code(rightHandSide)
 
         t = self.tindex_generator() #temproraty variable in 3AddressCode
 
@@ -305,7 +301,7 @@ class Parser(object):
         else:
             type_of_id = 'float ' #because id could be int or float
             self.symbol_table[lefHandSide] = 'float' #add type of new id to symbol table
-        rightHandSide_code, rightHandSide_root = self.get_yacc( rightHandSide)
+        rightHandSide_code, rightHandSide_root = self.generate_code( rightHandSide)
         code_str = type_of_id+" "+str(lefHandSide)+" "+operator+" "+str(rightHandSide_root)+";\n"
         return rightHandSide_code + code_str, lefHandSide
 
@@ -315,7 +311,7 @@ class Parser(object):
                 return "\n"
             all_code = ""
             for instruction in p:
-                instruction_code, root = self.get_yacc(instruction)
+                instruction_code, root = self.generate_code(instruction)
                 all_code += instruction_code
             return all_code
 
