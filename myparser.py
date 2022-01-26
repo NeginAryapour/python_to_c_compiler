@@ -158,19 +158,19 @@ class Parser(object):
             return self.yacc_assign(instruction)
 
         elif instruction[0] in self.operation_symbols :
-            return self.yacc_operator(instruction)
+            return self.operator_code(instruction)
         elif instruction[0] == 'if':
-            return self.yacc_if_elif_else(instruction)
+            return self.if_code(instruction)
         elif instruction[0] == 'while':
-            return self.yacc_while(instruction)
+            return self.while_code(instruction)
         elif instruction[0] == 'for':
-            return self.yacc_for(instruction)
+            return self.for_code(instruction)
         else:
             raise Exception("Invalid instruction: %s" % str(instruction))
 
     
 
-    def yacc_for(self, instruction):
+    def for_code(self, instruction):
         id = instruction[1]
         
         end_number = instruction[2]
@@ -206,7 +206,7 @@ class Parser(object):
         return if_code_body, None
 
    
-    def yacc_while(self, instruction):
+    def while_code(self, instruction):
         condition = instruction[1]
         statements = instruction[2]
 
@@ -227,7 +227,7 @@ class Parser(object):
 
         return condition_code + while_code_body, None
 
-    def yacc_if_elif_else(self, instruction):      
+    def if_code(self, instruction):      
         stack = []
         instruction_copy = instruction
 
@@ -279,7 +279,7 @@ class Parser(object):
     
 
 
-    def yacc_operator(self, instruction):
+    def operator_code(self, instruction):
         leftHandSide = instruction[1]
         rightHandSide = instruction[2]
         operator = instruction[0]
