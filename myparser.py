@@ -177,7 +177,7 @@ class Parser(object):
         step = 1
         
         stmts = instruction[3]
-        statement_code = self.yacc_program(stmts)
+        statement_code = self.program(stmts)
 
         start_label = self.labelindex_generator()
         end_label = self.labelindex_generator()
@@ -210,7 +210,7 @@ class Parser(object):
         statements = instruction[2]
 
         condition_code, condition_root = self.generate_code(condition)
-        statements_code = self.yacc_program(statements)
+        statements_code = self.program(statements)
 
         start_while_label = self.labelindex_generator()
         end_while_label = self.labelindex_generator()
@@ -237,7 +237,7 @@ class Parser(object):
             if new_condition == 'else':
                 stack.append({
                     'condition_name': 'else',
-                    'statements_code': self.yacc_program(instruction_copy[1])
+                    'statements_code': self.program(instruction_copy[1])
                 })
                 break #each if has jus one else (dangeling else is solved)
 
@@ -246,7 +246,7 @@ class Parser(object):
             stack.append({
                 'condition_name': 'else if', 
                 'condition_code': self.generate_code(instruction_copy[1]),
-                'statements_code': self.yacc_program(instruction_copy[2])
+                'statements_code': self.program(instruction_copy[2])
             })
 
             instruction_copy = instruction_copy[3]
@@ -309,7 +309,7 @@ class Parser(object):
         return rightHandSide_code + code_str, lefHandSide
 
 
-    def yacc_program(self, p):
+    def program(self, p):
             if not p:
                 return "\n"
             all_code = ""
@@ -318,10 +318,9 @@ class Parser(object):
                 all_code += instruction_code
             return all_code
 
-    def generate_tac(self):
-        body = self.yacc_program(self.parse_tree)
-        ctac = body
-        return ctac
+    def generate_three_address_code(self):
+        three_address_code_body = self.program(self.parse_tree)
+        return three_address_code_body
 
     def tindex_generator(self):
         self.tIndex += 1
@@ -336,6 +335,6 @@ if __name__ == "__main__":
     p = Parser()
     p.parsing('python_file.txt')
     c_file = open('c_file.txt', 'w')
-    c_code = p.generate_tac()
+    c_code = p.generate_three_address_code()
     c_file.write(c_code)
     c_file.close()
